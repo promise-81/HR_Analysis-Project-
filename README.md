@@ -66,7 +66,7 @@ This involved 	exploring the dataset to answer these questions;
        ORDER BY EMP_COUNT DESC;
     ```
     
- 2. What is the rae and ethnicity  breakdown of current employees
+ 2. What is the race and ethnicity  breakdown of current employees
 ```sql
 SELECT RACE,
        COUNT(*) AS RACE_COUNT FROM HR
@@ -78,6 +78,7 @@ SELECT RACE,
 
 ```sql
 -- I created an age column for the employees as of the year 2020
+
     ALTER TABLE HR
     ADD AGE INT;
     UPDATE HR
@@ -85,9 +86,11 @@ SELECT RACE,
     SELECT AGE FROM HR
 
     -- MIN.EMPLOYEE AGE
+
    SELECT  MIN(AGE) AS YOUNGEST FROM HR
    
-    -- MAX EMPLOYEE AGE 
+    -- MAX EMPLOYEE AGE
+
    SELECT MAX(AGE) AS OLDEST FROM HR
 
 -- AGE GROUP DISTRIBUTION 
@@ -134,10 +137,99 @@ SELECT RACE,
       END,GENDER
      ORDER BY AGE_GROUP,GENDER;
 ```
- 4. 
+4. Show the distribution of current employees working at headquaters and remote locations?
 
+```sql
+SELECT LOCATION,COUNT(*) AS EMP_COUNT
+       FROM HR
+       WHERE TERMDATE = '0000-00-00'
+       GROUP BY LOCATION 
+       ORDER BY EMP_COUNT DESC;
+```
 
- 
+5. What is the average length of employment in year by terminated employees?
+
+  ```sql
+SELECT AVG(DATEDIFF(DAY,HIRE_DATE,TERMDATE)/365)* 1.0 AS AVG_YEAR_OF_EMPLOYMENT
+   FROM HR
+   WHERE TERMDATE <> '0000-00-00' AND TERMDATE <>GETDATE() AND TERMDATE <= '2020-12-31';
+  ```
+
+6. Show the gender distribution in department and job titles
+
+```sql
+ -- JOBTITLE DISTRIBUTION
+
+    SELECT JOBTITLE, GENDER,
+      COUNT(*)AS EMP_COUNT FROM HR
+      WHERE TERMDATE ='0000-00-00'
+      GROUP BY JOBTITLE, GENDER
+      ORDER BY EMP_COUNT DESC;
+
+ -- DEPARTMENT DIISTRIBUTION
+
+      SELECT DEPARTMENT, GENDER,
+      COUNT(*)AS EMP_COUNT FROM HR
+      WHERE TERMDATE = '0000-00-00'
+      GROUP BY DEPARTMENT, GENDER
+      ORDER BY DEPARTMENT;
+```
+
+7. What is the department with the highest turnover rate?
+
+```sql
+ SELECT DEPARTMENT,
+        EMP_COUNT,
+        TERMINATED_EMP_COUNT,
+        ROUND((TERMINATED_EMP_COUNT/EMP_COUNT) * 0.10,2) AS TERMINATION_RATE
+ FROM(
+      SELECT DEPARTMENT,
+            COUNT(*) AS EMP_COUNT,
+            SUM(CASE WHEN TERMDATE<>'0000-00-00' AND TERMDATE <> GETDATE() AND TERMDATE <='2020-12-31' THEN 1 ELSE 0 END) AS TERMINATED_EMP_COUNT
+            FROM HR
+            GROUP BY DEPARTMENT
+            
+     ) AS SUBQUERY
+     ORDER BY TERMINATED_EMP_COUNT DESC;
+```
+
+8. Show the distribution of Employees location across the states
+
+```sql
+SELECT LOCATION_STATE,
+      COUNT(*) AS EMP_COUNT FROM HR
+      WHERE TERMDATE = '0000-00-00'
+      GROUP BY LOCATION_STATE
+      ORDER BY EMP_COUNT DESC;
+```
+
+9. How have the company  employees changed over time based on hires and terminations?
+
+```sql
+ SELECT YEARS,
+        HIRES,
+        TERMINATIONS,
+        HIRES - TERMINATIONS AS NET_CHANGE,
+        ROUND((HIRES-TERMINATIONS)*1.0/HIRES * 100,0) AS NET_CHANGE_PERCENT
+        FROM(
+            SELECT YEAR(HIRE_DATE) AS YEARS,
+                   COUNT(ID) AS HIRES,
+                   SUM(CASE WHEN TERMDATE <> '0000-00-00' AND TERMDATE <> GETDATE() AND TERMDATE <= '2020-12-31' THEN 1 ELSE 0 END) AS TERMINATIONS
+                   FROM HR
+                   GROUP BY YEAR(hire_date)) AS SUBQUERY
+ ORDER BY YEARS ASC;
+```
+
+10. What is the tenure distribution for each department?
+
+```sql
+SELECT DEPARTMENT,
+       ROUND(AVG(DATEDIFF(DAY,HIRE_DATE, TERMDATE)/365),1) AS AVG_TENURE
+FROM HR
+WHERE TERMDATE<>'0000-00-00' AND TERMDATE <= GETDATE() AND TERMDATE <= '2020-12-31'
+GROUP BY DEPARTMENT 
+ORDER BY AVG_TENURE DESC;
+```
 
 ### Results/Findings 
 
