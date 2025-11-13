@@ -1,4 +1,4 @@
-# HR_Analysis-Project
+# HR_Dashboard Analysis
 
 ## Table of Contents
 
