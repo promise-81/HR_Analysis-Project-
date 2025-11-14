@@ -234,12 +234,22 @@ ORDER BY AVG_TENURE DESC;
 ### Results/Findings 
 
 The Analysis Results are summarised as follows 
+- Gender distribution is approximately 51% Males, 46% Females and 3% Non-conforming
+- Workforce is conentrated in  Ohio
+- Most Employees fall into the 20-30 years age group
+- Average Employee Tenure is around 7 Years
+- Auditing department had the highest turnover, with a rate of 30%
+- Hires has outpaced terminations over the years, significantly influencing overall growth, despite recent increase in turnover rate
 
 ### Recommendations 
+- Investigate recent increase in turnover rate for root causes
+- Monitor hiring velocity vs attrition to prevent understaffing
+- Provide onboarding and mentoring early tenure employees
+- Use employee demographic disribution to guide DEI Initiatives 
 
 
 ### Limitations 
-
+I excluded  employee termination dates whose date exceeded within current year( Had a date range of 2020 and above, 2069 etc )
 
 ### References
-
+[HR Data Project Reference](https://youtu.be/PzyZI9uLXvY?si=oIEege5mnYbZr3By) 
